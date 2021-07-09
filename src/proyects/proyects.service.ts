@@ -16,7 +16,7 @@ export class ProyectsService {
     const proyects = await this.proyectModel.find();
     return proyects;
   }
-  async createOne(proyect: IProyects): Promise<IProyects> {
+  async create(proyect: IProyects): Promise<IProyects> {
     const new_proyect = await new this.proyectModel(proyect);
     return await new_proyect.save();
   }

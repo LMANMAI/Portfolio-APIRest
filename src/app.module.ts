@@ -6,9 +6,9 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
 @Module({
   imports: [
-    ProyectsModule,
-    ConfigModule.forRoot({ envFilePath: '.development.env' }),
+    ConfigModule.forRoot({ envFilePath: '.env' }),
     MongooseModule.forRoot(process.env.DB_URL, { useNewUrlParser: true }),
+    ProyectsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
