@@ -18,9 +18,9 @@ let AppModule = class AppModule {
 AppModule = __decorate([
     common_1.Module({
         imports: [
-            proyects_module_1.ProyectsModule,
-            config_1.ConfigModule.forRoot({ envFilePath: '.development.env' }),
+            config_1.ConfigModule.forRoot({ envFilePath: '.env' }),
             mongoose_1.MongooseModule.forRoot(process.env.DB_URL, { useNewUrlParser: true }),
+            proyects_module_1.ProyectsModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

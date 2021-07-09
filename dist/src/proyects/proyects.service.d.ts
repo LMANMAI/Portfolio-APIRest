@@ -5,5 +5,5 @@ export declare class ProyectsService {
     constructor(proyectModel: Model<IProyects>);
     getOne(proyectID: string): Promise<IProyects>;
     getAll(): Promise<IProyects[]>;
-    createOne(proyect: IProyects): Promise<IProyects>;
+    create(proyect: IProyects): Promise<IProyects>;
 }

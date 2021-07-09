@@ -28,7 +28,7 @@ let ProyectsService = class ProyectsService {
         const proyects = await this.proyectModel.find();
         return proyects;
     }
-    async createOne(proyect) {
+    async create(proyect) {
         const new_proyect = await new this.proyectModel(proyect);
         return await new_proyect.save();
     }

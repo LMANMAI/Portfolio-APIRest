@@ -1,9 +1,9 @@
 import { ProyectsService } from './proyects.service';
 import { IProyects } from '../../Interface/proyects.interface';
 export declare class ProyectsController {
-    private readonly proyectsServide;
+    private proyectsServide;
     constructor(proyectsServide: ProyectsService);
-    getProyect(proyectID: string): Promise<IProyects>;
-    getProyects(): Promise<IProyects[]>;
-    setProyects(proyect: IProyects): Promise<IProyects>;
+    getProyect(res: any, proyectID: any): Promise<IProyects>;
+    getProyects(res: any): Promise<IProyects>;
+    setProyects(res: any, proyect: IProyects): Promise<IProyects>;
 }

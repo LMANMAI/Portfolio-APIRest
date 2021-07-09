@@ -19,34 +19,44 @@ let ProyectsController = class ProyectsController {
     constructor(proyectsServide) {
         this.proyectsServide = proyectsServide;
     }
-    getProyect(proyectID) {
-        return this.proyectsServide.getOne(proyectID);
+    async getProyect(res, proyectID) {
+        const proyect = this.proyectsServide.getOne(proyectID);
+        if (!proyect)
+            throw new common_1.NotFoundException('Proyect does not exists');
+        return res.status(common_1.HttpStatus.OK).json({ proyect });
     }
-    getProyects() {
-        return this.proyectsServide.getAll();
+    async getProyects(res) {
+        const proyects = await this.proyectsServide.getAll();
+        return res.status(common_1.HttpStatus.OK).json({ proyects });
     }
-    setProyects(proyect) {
-        return this.proyectsServide.createOne(proyect);
+    async setProyects(res, proyect) {
+        const new_proyect = await this.proyectsServide.create(proyect);
+        return res
+            .status(common_1.HttpStatus.OK)
+            .json({ message: 'Proyect insert in DB succesfully', new_proyect });
     }
 };
 __decorate([
     common_1.Get('/:id'),
-    __param(0, common_1.Param('proyectId')),
+    __param(0, common_1.Res()),
+    __param(1, common_1.Param('proyectId')),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "getProyect", null);
 __decorate([
     common_1.Get('/'),
+    __param(0, common_1.Res()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
+    __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "getProyects", null);
 __decorate([
-    common_1.Post('/'),
-    __param(0, common_1.Body()),
+    common_1.Post('/create'),
+    __param(0, common_1.Res()),
+    __param(1, common_1.Body()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "setProyects", null);
 ProyectsController = __decorate([
