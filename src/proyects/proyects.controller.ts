@@ -2,24 +2,25 @@ import {
   Controller,
   Get,
   Post,
-  Req,
   Res,
   Body,
   Param,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { ProyectsService } from './proyects.service';
 import { IProyects } from '../../Interface/proyects.interface';
 @Controller('proyects')
 export class ProyectsController {
-  constructor(private readonly proyectsServide: ProyectsService) {}
+  constructor(private proyectsServide: ProyectsService) {}
 
   @Get('/:id')
   async getProyect(
     @Res() res,
-    @Param('proyectId') proyectID: string,
+    @Param('proyectId') proyectID,
   ): Promise<IProyects> {
     const proyect = this.proyectsServide.getOne(proyectID);
+    if (!proyect) throw new NotFoundException('Proyect does not exists');
     return res.status(HttpStatus.OK).json({ proyect });
   }
   @Get('/')
