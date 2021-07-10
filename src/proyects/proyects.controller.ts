@@ -9,11 +9,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ProyectsService } from './proyects.service';
-import { IProyects } from '../../Interface/proyects.interface';
+import { IProyects } from '../Interface/proyects.interface';
 @Controller('proyects')
 export class ProyectsController {
   constructor(private proyectsServide: ProyectsService) {}
-
+  @Get('/')
+  async getProyects(@Res() res): Promise<IProyects> {
+    const proyects = await this.proyectsServide.getAll();
+    return res.status(HttpStatus.OK).json({ proyects });
+  }
   @Get('/:id')
   async getProyect(
     @Res() res,
@@ -23,11 +27,7 @@ export class ProyectsController {
     if (!proyect) throw new NotFoundException('Proyect does not exists');
     return res.status(HttpStatus.OK).json({ proyect });
   }
-  @Get('/')
-  async getProyects(@Res() res): Promise<IProyects> {
-    const proyects = await this.proyectsServide.getAll();
-    return res.status(HttpStatus.OK).json({ proyects });
-  }
+
   @Post('/create')
   async setProyects(
     @Res() res,
