@@ -28,7 +28,7 @@ export class ProyectsController {
     return res.status(HttpStatus.OK).json({ proyect });
   }
 
-  @Post('/create')
+  @Post(process.env.METCREATE)
   async setProyects(
     @Res() res,
     @Body() proyect: IProyects,
