@@ -5,4 +5,5 @@ export interface IProyects extends Document {
   readonly linkGitHub: String;
   readonly technologies: Array<String>;
   readonly image: String;
+  readonly height: Number;
 }

@@ -5,4 +5,5 @@ export const ProyectSchema = new Schema({
   linkGitHub: { required: true, trim: true, type: String },
   technologies: { required: true, trim: true, type: Array },
   image: { required: true, trim: true, type: String },
+  height: { required: true, type: Number },
 });
