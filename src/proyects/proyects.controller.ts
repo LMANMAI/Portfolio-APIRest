@@ -18,11 +18,9 @@ export class ProyectsController {
     const proyects = await this.proyectsServide.getAll();
     return res.status(HttpStatus.OK).json({ proyects });
   }
+
   @Get('/:id')
-  async getProyect(
-    @Res() res,
-    @Param('proyectId') proyectID,
-  ): Promise<IProyects> {
+  async getProyect(@Res() res, @Param('proyectId') proyectID) {
     const proyect = this.proyectsServide.getOne(proyectID);
     if (!proyect) throw new NotFoundException('Proyect does not exists');
     return res.status(HttpStatus.OK).json({ proyect });
