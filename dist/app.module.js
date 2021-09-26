@@ -10,16 +10,20 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const app_service_1 = require("./app.service");
-const proyects_controller_1 = require("./proyects/proyects.controller");
-const proyects_service_1 = require("./proyects/proyects.service");
 const proyects_module_1 = require("./proyects/proyects.module");
+const mongoose_1 = require("@nestjs/mongoose");
+const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     common_1.Module({
-        imports: [proyects_module_1.ProyectsModule],
-        controllers: [app_controller_1.AppController, proyects_controller_1.ProyectsController],
-        providers: [app_service_1.AppService, proyects_service_1.ProyectsService],
+        imports: [
+            config_1.ConfigModule.forRoot({ envFilePath: '.env' }),
+            mongoose_1.MongooseModule.forRoot(process.env.DB_URL, { useNewUrlParser: true }),
+            proyects_module_1.ProyectsModule,
+        ],
+        controllers: [app_controller_1.AppController],
+        providers: [app_service_1.AppService],
     })
 ], AppModule);
 exports.AppModule = AppModule;

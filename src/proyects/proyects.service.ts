@@ -8,13 +8,13 @@ export class ProyectsService {
     @InjectModel('Proyects') private readonly proyectModel: Model<IProyects>,
   ) {}
 
-  async getOne(proyectID: string): Promise<IProyects> {
-    const proyect = await this.proyectModel.findById(proyectID);
-    return proyect;
-  }
   async getAll(): Promise<IProyects[]> {
     const proyects = await this.proyectModel.find();
     return proyects;
+  }
+  async getOne(proyectID: string): Promise<IProyects> {
+    const proyect = await this.proyectModel.findById(proyectID);
+    return proyect;
   }
   async create(proyect: IProyects): Promise<IProyects> {
     const new_proyect = await new this.proyectModel(proyect);

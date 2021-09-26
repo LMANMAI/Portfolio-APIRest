@@ -8,5 +8,7 @@ exports.ProyectSchema = new mongoose_1.Schema({
     linkGitHub: { required: true, trim: true, type: String },
     technologies: { required: true, trim: true, type: Array },
     image: { required: true, trim: true, type: String },
+    height: { required: true, type: Number },
+    proyectType: { required: true, trim: true, type: String },
 });
 //# sourceMappingURL=proyects.schema.js.map

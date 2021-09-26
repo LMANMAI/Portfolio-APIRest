@@ -6,4 +6,5 @@ export const ProyectSchema = new Schema({
   technologies: { required: true, trim: true, type: Array },
   image: { required: true, trim: true, type: String },
   height: { required: true, type: Number },
+  proyectType: { required: true, trim: true, type: String },
 });

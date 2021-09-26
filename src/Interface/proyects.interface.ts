@@ -6,4 +6,5 @@ export interface IProyects extends Document {
   readonly technologies: Array<String>;
   readonly image: String;
   readonly height: Number;
+  readonly proyectType: String;
 }
