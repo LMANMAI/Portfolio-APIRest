@@ -20,6 +20,7 @@ let ProyectsController = class ProyectsController {
         this.proyectsService = proyectsService;
     }
     async getProyects(res) {
+        console.log('desde el controler');
         const proyects = await this.proyectsService.getAll();
         return res.status(common_1.HttpStatus.OK).json({ proyects });
     }
