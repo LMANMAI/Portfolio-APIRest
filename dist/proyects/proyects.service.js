@@ -22,7 +22,6 @@ let ProyectsService = class ProyectsService {
     }
     async getAll() {
         const proyects = await this.proyectModel.find();
-        console.log(proyects);
         return proyects;
     }
     async getOne(proyectID) {
