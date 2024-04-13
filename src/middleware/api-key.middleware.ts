@@ -19,23 +19,19 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { HeaderAPIKeyStrategy } from 'passport-headerapikey';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
-export class ApiKeyMiddleware implements CanActivate {
-  async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
-
-    const apiKey = request.headers['api-key']; // give the name you want
-
-    if (!apiKey) {
-      throw new UnauthorizedException('API key is missing.');
-    }
-
-    // call your env. var the name you want
-    if (apiKey !== process.env.API_KEY) {
-      throw new UnauthorizedException('Invalid API key.');
-    }
-
-    return true;
+export class ApiKeyMiddleware extends PassportStrategy(HeaderAPIKeyStrategy) {
+  constructor(private authService: AuthService) {
+    super({ header: 'apiKey', prefix: '' }, true, (apikey, done) => {
+      const checkKey = authService.validateApiKey(apikey);
+      if (!checkKey) {
+        return done(false);
+      }
+      return done(true);
+    });
   }
 }

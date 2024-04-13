@@ -9,20 +9,19 @@ import {
   Param,
   HttpStatus,
   NotFoundException,
-  UseGuards,
 } from '@nestjs/common';
 import { ProyectsService } from './proyects.service';
 import { IProyect } from '../Schema/proyects.schema';
-import { ApiKeyMiddleware } from '../middleware/api-key.middleware';
 
 @Controller('proyects')
-@UseGuards(ApiKeyMiddleware)
 export class ProyectsController {
   constructor(private proyectsService: ProyectsService) {}
   @Get('/')
   async getProyects(@Res() res): Promise<IProyect> {
     const proyects = await this.proyectsService.getAll();
-    return res.status(HttpStatus.OK).json({ proyects });
+    return res
+      .status(HttpStatus.OK)
+      .json({ status: 200, msg: 'Proyectos', proyects });
   }
 
   @Get('/:proyectID')

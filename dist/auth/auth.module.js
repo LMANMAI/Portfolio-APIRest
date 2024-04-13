@@ -9,11 +9,19 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.AuthModule = void 0;
 const common_1 = require("@nestjs/common");
 const auth_service_1 = require("./auth.service");
+const passport_1 = require("@nestjs/passport");
+const config_1 = require("@nestjs/config");
+const api_key_middleware_1 = require("../middleware/api-key.middleware");
+const auth_middleware_1 = require("./auth.middleware");
 let AuthModule = class AuthModule {
+    configure(consumer) {
+        consumer.apply(auth_middleware_1.AuthMiddleware).forRoutes('*');
+    }
 };
 AuthModule = __decorate([
     common_1.Module({
-        providers: [auth_service_1.AuthService]
+        imports: [passport_1.PassportModule, config_1.ConfigModule],
+        providers: [auth_service_1.AuthService, api_key_middleware_1.ApiKeyMiddleware],
     })
 ], AuthModule);
 exports.AuthModule = AuthModule;

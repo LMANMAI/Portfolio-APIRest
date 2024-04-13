@@ -5,24 +5,30 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.ApiKeyMiddleware = void 0;
 const common_1 = require("@nestjs/common");
-let ApiKeyMiddleware = class ApiKeyMiddleware {
-    async canActivate(context) {
-        const request = context.switchToHttp().getRequest();
-        const apiKey = request.headers['api-key'];
-        if (!apiKey) {
-            throw new common_1.UnauthorizedException('API key is missing.');
-        }
-        if (apiKey !== process.env.API_KEY) {
-            throw new common_1.UnauthorizedException('Invalid API key.');
-        }
-        return true;
+const passport_1 = require("@nestjs/passport");
+const passport_headerapikey_1 = require("passport-headerapikey");
+const auth_service_1 = require("../auth/auth.service");
+let ApiKeyMiddleware = class ApiKeyMiddleware extends passport_1.PassportStrategy(passport_headerapikey_1.HeaderAPIKeyStrategy) {
+    constructor(authService) {
+        super({ header: 'apiKey', prefix: '' }, true, (apikey, done) => {
+            const checkKey = authService.validateApiKey(apikey);
+            if (!checkKey) {
+                return done(false);
+            }
+            return done(true);
+        });
+        this.authService = authService;
     }
 };
 ApiKeyMiddleware = __decorate([
-    common_1.Injectable()
+    common_1.Injectable(),
+    __metadata("design:paramtypes", [auth_service_1.AuthService])
 ], ApiKeyMiddleware);
 exports.ApiKeyMiddleware = ApiKeyMiddleware;
 //# sourceMappingURL=api-key.middleware.js.map
