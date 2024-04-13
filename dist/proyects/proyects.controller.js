@@ -15,6 +15,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProyectsController = void 0;
 const common_1 = require("@nestjs/common");
 const proyects_service_1 = require("./proyects.service");
+const api_key_middleware_1 = require("../middleware/api-key.middleware");
 let ProyectsController = class ProyectsController {
     constructor(proyectsService) {
         this.proyectsService = proyectsService;
@@ -94,6 +95,7 @@ __decorate([
 ], ProyectsController.prototype, "deleteProyect", null);
 ProyectsController = __decorate([
     common_1.Controller('proyects'),
+    common_1.UseGuards(api_key_middleware_1.ApiKeyMiddleware),
     __metadata("design:paramtypes", [proyects_service_1.ProyectsService])
 ], ProyectsController);
 exports.ProyectsController = ProyectsController;

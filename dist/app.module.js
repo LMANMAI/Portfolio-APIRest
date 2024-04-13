@@ -13,14 +13,16 @@ const app_service_1 = require("./app.service");
 const proyects_module_1 = require("./proyects/proyects.module");
 const mongoose_1 = require("@nestjs/mongoose");
 const config_1 = require("@nestjs/config");
+const auth_module_1 = require("./auth/auth.module");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
     common_1.Module({
         imports: [
             config_1.ConfigModule.forRoot({ envFilePath: '.env' }),
-            mongoose_1.MongooseModule.forRoot(process.env.DB_URL, { useNewUrlParser: true }),
+            mongoose_1.MongooseModule.forRoot(process.env.DB_URL),
             proyects_module_1.ProyectsModule,
+            auth_module_1.AuthModule,
         ],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],

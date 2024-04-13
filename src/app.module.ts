@@ -4,11 +4,13 @@ import { AppService } from './app.service';
 import { ProyectsModule } from './proyects/proyects.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule } from '@nestjs/config';
+import { AuthModule } from './auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ envFilePath: '.env' }),
-    MongooseModule.forRoot(process.env.DB_URL, { useNewUrlParser: true }),
+    MongooseModule.forRoot(process.env.DB_URL),
     ProyectsModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
