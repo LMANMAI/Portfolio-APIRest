@@ -32,6 +32,14 @@ let ProyectsService = class ProyectsService {
         const new_proyect = await new this.proyectModel(proyect);
         return await new_proyect.save();
     }
+    async editProyect(proyectID, updatedProyect) {
+        const proyect = await this.proyectModel.findByIdAndUpdate(proyectID, updatedProyect, { new: true });
+        return proyect;
+    }
+    async deleteProyect(proyectID) {
+        const proyect = await this.proyectModel.findByIdAndDelete(proyectID);
+        return proyect;
+    }
 };
 ProyectsService = __decorate([
     common_1.Injectable(),

@@ -35,6 +35,22 @@ let ProyectsController = class ProyectsController {
             .status(common_1.HttpStatus.OK)
             .json({ message: 'Proyect insert in DB succesfully', new_proyect });
     }
+    async editProyect(res, proyectID, updatedProyect) {
+        const editedProyect = await this.proyectsService.editProyect(proyectID, updatedProyect);
+        if (!editedProyect)
+            throw new common_1.NotFoundException("Proyect doesn't exist");
+        return res
+            .status(common_1.HttpStatus.OK)
+            .json({ message: 'Proyect updated successfully', editedProyect });
+    }
+    async deleteProyect(res, proyectID) {
+        const deletedProyect = await this.proyectsService.deleteProyect(proyectID);
+        if (!deletedProyect)
+            throw new common_1.NotFoundException("Proyect doesn't exist");
+        return res
+            .status(common_1.HttpStatus.OK)
+            .json({ message: 'Proyect deleted successfully', deletedProyect });
+    }
 };
 __decorate([
     common_1.Get('/'),
@@ -59,6 +75,23 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "setProyects", null);
+__decorate([
+    common_1.Put('/:proyectID'),
+    __param(0, common_1.Res()),
+    __param(1, common_1.Param('proyectID')),
+    __param(2, common_1.Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProyectsController.prototype, "editProyect", null);
+__decorate([
+    common_1.Delete('/:proyectID'),
+    __param(0, common_1.Res()),
+    __param(1, common_1.Param('proyectID')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProyectsController.prototype, "deleteProyect", null);
 ProyectsController = __decorate([
     common_1.Controller('proyects'),
     __metadata("design:paramtypes", [proyects_service_1.ProyectsService])

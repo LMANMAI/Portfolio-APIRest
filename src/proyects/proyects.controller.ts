@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Post,
+  Put,
+  Delete,
   Res,
   Body,
   Param,
@@ -9,12 +11,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { ProyectsService } from './proyects.service';
-import { IProyects } from '../Interface/proyects.interface';
+import { IProyect } from '../Schema/proyects.schema';
 @Controller('proyects')
 export class ProyectsController {
   constructor(private proyectsService: ProyectsService) {}
   @Get('/')
-  async getProyects(@Res() res): Promise<IProyects> {
+  async getProyects(@Res() res): Promise<IProyect> {
     const proyects = await this.proyectsService.getAll();
     return res.status(HttpStatus.OK).json({ proyects });
   }
@@ -27,13 +29,35 @@ export class ProyectsController {
   }
 
   @Post('/create')
-  async setProyects(
-    @Res() res,
-    @Body() proyect: IProyects,
-  ): Promise<IProyects> {
+  async setProyects(@Res() res, @Body() proyect: IProyect): Promise<IProyect> {
     const new_proyect = await this.proyectsService.create(proyect);
     return res
       .status(HttpStatus.OK)
       .json({ message: 'Proyect insert in DB succesfully', new_proyect });
+  }
+
+  @Put('/:proyectID')
+  async editProyect(
+    @Res() res,
+    @Param('proyectID') proyectID,
+    @Body() updatedProyect: Partial<IProyect>,
+  ) {
+    const editedProyect = await this.proyectsService.editProyect(
+      proyectID,
+      updatedProyect,
+    );
+    if (!editedProyect) throw new NotFoundException("Proyect doesn't exist");
+    return res
+      .status(HttpStatus.OK)
+      .json({ message: 'Proyect updated successfully', editedProyect });
+  }
+
+  @Delete('/:proyectID')
+  async deleteProyect(@Res() res, @Param('proyectID') proyectID) {
+    const deletedProyect = await this.proyectsService.deleteProyect(proyectID);
+    if (!deletedProyect) throw new NotFoundException("Proyect doesn't exist");
+    return res
+      .status(HttpStatus.OK)
+      .json({ message: 'Proyect deleted successfully', deletedProyect });
   }
 }
