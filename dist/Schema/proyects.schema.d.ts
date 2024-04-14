@@ -22,31 +22,24 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { Schema } from 'mongoose';
-export declare const ProyectSchema: Schema<any, import("mongoose").Model<any, any, any, any, any, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, {
-    image: string;
+import { Schema, Document } from 'mongoose';
+interface IAditionlData {
+    text: string;
+    img: string;
+}
+export interface IProyect extends Document {
     name: string;
-    link: string;
-    linkGitHub: string;
-    technologies: any[];
-    height: number;
+    productionUrl: string;
+    repositoryUrl: string;
+    technologyStack: string[];
+    posterPath: string;
     proyectType: string;
-}, import("mongoose").Document<unknown, {}, import("mongoose").FlatRecord<{
-    image: string;
-    name: string;
-    link: string;
-    linkGitHub: string;
-    technologies: any[];
-    height: number;
-    proyectType: string;
-}>> & import("mongoose").FlatRecord<{
-    image: string;
-    name: string;
-    link: string;
-    linkGitHub: string;
-    technologies: any[];
-    height: number;
-    proyectType: string;
-}> & {
+    description?: string;
+    aditionalData: IAditionlData[];
+}
+export declare const ProyectSchema: Schema<IProyect, import("mongoose").Model<IProyect, any, any, any, Document<unknown, any, IProyect> & IProyect & {
+    _id: import("mongoose").Types.ObjectId;
+}, any>, {}, {}, {}, {}, import("mongoose").DefaultSchemaOptions, IProyect, Document<unknown, {}, import("mongoose").FlatRecord<IProyect>> & import("mongoose").FlatRecord<IProyect> & {
     _id: import("mongoose").Types.ObjectId;
 }>;
+export default ProyectSchema;
