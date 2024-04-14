@@ -16,7 +16,9 @@ export class ProyectsController {
   @Get('/')
   async getProyects(@Res() res): Promise<IProyects> {
     const proyects = await this.proyectsService.getAll();
-    return res.status(HttpStatus.OK).json({ proyects });
+    return res
+      .status(HttpStatus.OK)
+      .json({ status: 200, msg: 'proyectos', proyects });
   }
 
   @Get('/:proyectID')

@@ -10,7 +10,6 @@ export class ProyectsService {
 
   async getAll(): Promise<IProyects[]> {
     const proyects = await this.proyectModel.find();
-
     return proyects;
   }
   async getOne(proyectID: string): Promise<IProyects> {

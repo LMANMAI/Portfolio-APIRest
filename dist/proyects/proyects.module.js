@@ -15,7 +15,7 @@ const proyects_schema_1 = require("../Schema/proyects.schema");
 let ProyectsModule = class ProyectsModule {
 };
 ProyectsModule = __decorate([
-    common_1.Module({
+    (0, common_1.Module)({
         imports: [
             mongoose_1.MongooseModule.forFeature([{ name: 'Proyects', schema: proyects_schema_1.ProyectSchema }]),
         ],

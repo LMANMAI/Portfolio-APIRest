@@ -16,10 +16,10 @@ const config_1 = require("@nestjs/config");
 let AppModule = class AppModule {
 };
 AppModule = __decorate([
-    common_1.Module({
+    (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ envFilePath: '.env' }),
-            mongoose_1.MongooseModule.forRoot(process.env.DB_URL, { useNewUrlParser: true }),
+            mongoose_1.MongooseModule.forRoot(process.env.DB_URL),
             proyects_module_1.ProyectsModule,
         ],
         controllers: [app_controller_1.AppController],

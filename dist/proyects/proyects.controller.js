@@ -21,7 +21,9 @@ let ProyectsController = class ProyectsController {
     }
     async getProyects(res) {
         const proyects = await this.proyectsService.getAll();
-        return res.status(common_1.HttpStatus.OK).json({ proyects });
+        return res
+            .status(common_1.HttpStatus.OK)
+            .json({ status: 200, msg: 'proyectos', proyects });
     }
     async getOne(res, proyectID) {
         const proyect = await this.proyectsService.getOne(proyectID);
@@ -37,30 +39,30 @@ let ProyectsController = class ProyectsController {
     }
 };
 __decorate([
-    common_1.Get('/'),
-    __param(0, common_1.Res()),
+    (0, common_1.Get)('/'),
+    __param(0, (0, common_1.Res)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "getProyects", null);
 __decorate([
-    common_1.Get('/:proyectID'),
-    __param(0, common_1.Res()),
-    __param(1, common_1.Param('proyectID')),
+    (0, common_1.Get)('/:proyectID'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Param)('proyectID')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "getOne", null);
 __decorate([
-    common_1.Post('/create'),
-    __param(0, common_1.Res()),
-    __param(1, common_1.Body()),
+    (0, common_1.Post)('/create'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Body)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "setProyects", null);
 ProyectsController = __decorate([
-    common_1.Controller('proyects'),
+    (0, common_1.Controller)('proyects'),
     __metadata("design:paramtypes", [proyects_service_1.ProyectsService])
 ], ProyectsController);
 exports.ProyectsController = ProyectsController;
