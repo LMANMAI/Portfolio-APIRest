@@ -13,7 +13,11 @@ const app_service_1 = require("./app.service");
 const proyects_module_1 = require("./proyects/proyects.module");
 const mongoose_1 = require("@nestjs/mongoose");
 const config_1 = require("@nestjs/config");
+const middleware_1 = require("./middleware");
 let AppModule = class AppModule {
+    configure(consumer) {
+        consumer.apply(middleware_1.ApiKeyMiddleware).forRoutes('proyects/*');
+    }
 };
 AppModule = __decorate([
     (0, common_1.Module)({
