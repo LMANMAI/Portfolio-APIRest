@@ -16,6 +16,6 @@ import { ApiKeyMiddleware } from './middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(ApiKeyMiddleware).forRoutes('proyects/*');
+    consumer.apply(ApiKeyMiddleware).forRoutes('*');
   }
 }
