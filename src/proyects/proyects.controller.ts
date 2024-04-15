@@ -9,6 +9,7 @@ import {
   NotFoundException,
   Put,
   Delete,
+  BadRequestException,
 } from '@nestjs/common';
 import { ProyectsService } from './proyects.service';
 import { IProyect } from '../Schema/proyects.schema';
@@ -27,16 +28,23 @@ export class ProyectsController {
   @Get('/:proyectID')
   async getOne(@Res() res, @Param('proyectID') proyectID) {
     const proyect = await this.proyectsService.getOne(proyectID);
-    if (!proyect) throw new NotFoundException("proyect doesn't exists");
-    return res.status(HttpStatus.OK).json({ proyect });
+    if (!proyect) throw new NotFoundException('Proyecto no encontrado');
+    return res
+      .status(HttpStatus.OK)
+      .json({ status: 200, msg: 'proyectos', proyect });
   }
 
   @Post('/create')
   async setProyects(@Res() res, @Body() proyect: IProyect): Promise<IProyect> {
-    const new_proyect = await this.proyectsService.create(proyect);
-    return res
-      .status(HttpStatus.OK)
-      .json({ message: 'Proyect insert in DB succesfully', new_proyect });
+    if (!proyect) {
+      throw new BadRequestException('Datos del proyecto requeridos');
+    }
+    const newProyect = await this.proyectsService.create(proyect);
+    return res.status(HttpStatus.OK).json({
+      status: 200,
+      message: 'Proyecto creado exitosamente',
+      data: newProyect,
+    });
   }
 
   @Put('/:proyectID')
@@ -49,18 +57,22 @@ export class ProyectsController {
       proyectID,
       updatedProyect,
     );
-    if (!editedProyect) throw new NotFoundException("Proyect doesn't exist");
-    return res
-      .status(HttpStatus.OK)
-      .json({ message: 'Proyect updated successfully', editedProyect });
+    if (!editedProyect) throw new NotFoundException('Proyecto no encontrado');
+    return res.status(HttpStatus.OK).json({
+      status: 200,
+      message: 'Proyecto actualizado exitosamente',
+      data: editedProyect,
+    });
   }
 
   @Delete('/:proyectID')
   async deleteProyect(@Res() res, @Param('proyectID') proyectID) {
     const deletedProyect = await this.proyectsService.deleteProyect(proyectID);
-    if (!deletedProyect) throw new NotFoundException("Proyect doesn't exist");
-    return res
-      .status(HttpStatus.OK)
-      .json({ message: 'Proyect deleted successfully', deletedProyect });
+    if (!deletedProyect) throw new NotFoundException('Proyecto no encontrado');
+    return res.status(HttpStatus.OK).json({
+      status: 200,
+      message: 'Proyecto eliminado exitosamente',
+      data: deletedProyect,
+    });
   }
 }
