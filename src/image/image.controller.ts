@@ -1,4 +1,11 @@
-import { Controller, Post, Delete, UploadedFile, UseInterceptors, Param } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Delete,
+  UploadedFile,
+  UseInterceptors,
+  Param,
+} from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ImageService } from './image.service';
 
@@ -9,7 +16,7 @@ export class ImageController {
   @Post('upload')
   @UseInterceptors(FileInterceptor('image'))
   async uploadImage(@UploadedFile() image: Express.Multer.File) {
-    const imageUrl = await this.imageService.uploadImage(image.path);
+    const imageUrl = await this.imageService.uploadImage(image);
     return { imageUrl };
   }
 

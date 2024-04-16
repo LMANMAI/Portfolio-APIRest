@@ -1,26 +1,47 @@
 import { Injectable } from '@nestjs/common';
 import * as cloudinary from 'cloudinary';
+import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
+import * as toStream from 'buffer-to-stream';
 
 @Injectable()
 export class ImageService {
   constructor() {
     // Configuración de Cloudinary
     cloudinary.v2.config({
-      cloud_name: 'tu_nombre_de_usuario_en_cloudinary',
-      api_key: 'tu_api_key',
-      api_secret: 'tu_api_secret',
+      cloud_name: process.env.CLOUDINARY_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
     });
   }
 
-  async uploadImage(imagePath: string) {
-    // Subir imagen a Cloudinary
-    const result = await cloudinary.v2.uploader.upload(imagePath);
-    return result.secure_url;
+  async uploadImage(
+    file: Express.Multer.File,
+  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
+    return new Promise((resolve, reject) => {
+      const uploadStream = v2.uploader.upload_stream(
+        { folder: 'proyects', resource_type: 'auto' },
+        (error, result: any) => {
+          if (error) {
+            return reject(error);
+          }
+          resolve(result);
+        },
+      );
+      toStream(file.buffer).pipe(uploadStream);
+    });
   }
 
-  async deleteImage(imageId: string) {
+  async deleteImage(imageId: string): Promise<string> {
     // Eliminar imagen de Cloudinary
-    const result = await cloudinary.v2.uploader.destroy(imageId);
-    return result.result === 'ok';
+    return new Promise<any>((resolve, reject) => {
+      v2.uploader.destroy(imageId, (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+          return result.result === 'ok';
+        }
+      });
+    });
   }
 }

@@ -14,21 +14,24 @@ const proyects_module_1 = require("./proyects/proyects.module");
 const mongoose_1 = require("@nestjs/mongoose");
 const config_1 = require("@nestjs/config");
 const middleware_1 = require("./middleware");
+const image_service_1 = require("./image/image.service");
+const image_module_1 = require("./image/image.module");
 let AppModule = class AppModule {
     configure(consumer) {
-        consumer.apply(middleware_1.ApiKeyMiddleware).forRoutes('proyects/*');
+        consumer.apply(middleware_1.ApiKeyMiddleware).forRoutes('*');
     }
 };
-AppModule = __decorate([
+exports.AppModule = AppModule;
+exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
         imports: [
             config_1.ConfigModule.forRoot({ envFilePath: '.env' }),
             mongoose_1.MongooseModule.forRoot(process.env.DB_URL),
             proyects_module_1.ProyectsModule,
+            image_module_1.ImageModule,
         ],
         controllers: [app_controller_1.AppController],
-        providers: [app_service_1.AppService],
+        providers: [app_service_1.AppService, image_service_1.ImageService],
     })
 ], AppModule);
-exports.AppModule = AppModule;
 //# sourceMappingURL=app.module.js.map

@@ -28,32 +28,44 @@ let ProyectsController = class ProyectsController {
     async getOne(res, proyectID) {
         const proyect = await this.proyectsService.getOne(proyectID);
         if (!proyect)
-            throw new common_1.NotFoundException("proyect doesn't exists");
-        return res.status(common_1.HttpStatus.OK).json({ proyect });
-    }
-    async setProyects(res, proyect) {
-        const new_proyect = await this.proyectsService.create(proyect);
+            throw new common_1.NotFoundException('Proyecto no encontrado');
         return res
             .status(common_1.HttpStatus.OK)
-            .json({ message: 'Proyect insert in DB succesfully', new_proyect });
+            .json({ status: 200, msg: 'proyectos', proyect });
+    }
+    async setProyects(res, proyect) {
+        if (!proyect) {
+            throw new common_1.BadRequestException('Datos del proyecto requeridos');
+        }
+        const newProyect = await this.proyectsService.create(proyect);
+        return res.status(common_1.HttpStatus.OK).json({
+            status: 200,
+            message: 'Proyecto creado exitosamente',
+            data: newProyect,
+        });
     }
     async editProyect(res, proyectID, updatedProyect) {
         const editedProyect = await this.proyectsService.editProyect(proyectID, updatedProyect);
         if (!editedProyect)
-            throw new common_1.NotFoundException("Proyect doesn't exist");
-        return res
-            .status(common_1.HttpStatus.OK)
-            .json({ message: 'Proyect updated successfully', editedProyect });
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        return res.status(common_1.HttpStatus.OK).json({
+            status: 200,
+            message: 'Proyecto actualizado exitosamente',
+            data: editedProyect,
+        });
     }
     async deleteProyect(res, proyectID) {
         const deletedProyect = await this.proyectsService.deleteProyect(proyectID);
         if (!deletedProyect)
-            throw new common_1.NotFoundException("Proyect doesn't exist");
-        return res
-            .status(common_1.HttpStatus.OK)
-            .json({ message: 'Proyect deleted successfully', deletedProyect });
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        return res.status(common_1.HttpStatus.OK).json({
+            status: 200,
+            message: 'Proyecto eliminado exitosamente',
+            data: deletedProyect,
+        });
     }
 };
+exports.ProyectsController = ProyectsController;
 __decorate([
     (0, common_1.Get)('/'),
     __param(0, (0, common_1.Res)()),
@@ -94,9 +106,8 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "deleteProyect", null);
-ProyectsController = __decorate([
+exports.ProyectsController = ProyectsController = __decorate([
     (0, common_1.Controller)('proyects'),
     __metadata("design:paramtypes", [proyects_service_1.ProyectsService])
 ], ProyectsController);
-exports.ProyectsController = ProyectsController;
 //# sourceMappingURL=proyects.controller.js.map

@@ -41,10 +41,10 @@ let ProyectsService = class ProyectsService {
         return proyect;
     }
 };
-ProyectsService = __decorate([
+exports.ProyectsService = ProyectsService;
+exports.ProyectsService = ProyectsService = __decorate([
     (0, common_1.Injectable)(),
     __param(0, (0, mongoose_1.InjectModel)('Proyects')),
     __metadata("design:paramtypes", [mongoose_2.Model])
 ], ProyectsService);
-exports.ProyectsService = ProyectsService;
 //# sourceMappingURL=proyects.service.js.map
