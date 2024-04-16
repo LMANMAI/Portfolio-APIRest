@@ -24,7 +24,7 @@ export class ImageService {
           if (error) {
             return reject(error);
           }
-          resolve(result);
+          resolve(result.public_id);
         },
       );
       toStream(file.buffer).pipe(uploadStream);
