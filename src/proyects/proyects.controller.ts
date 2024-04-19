@@ -85,6 +85,24 @@ export class ProyectsController {
     });
   }
 
+  @UseInterceptors(FileInterceptor('image'))
+  @Put('/aditionalData/:proyectID')
+  async setAditionalData(
+    @Res() res,
+    @Param('proyectID') proyectID,
+    @Body() updatedProyect: Partial<IProyect>,
+  ) {
+    const editedProyect = await this.proyectsService.editProyect(
+      proyectID,
+      updatedProyect,
+    );
+    if (!editedProyect) throw new NotFoundException('Proyecto no encontrado');
+    return res.status(HttpStatus.OK).json({
+      status: 200,
+      message: 'Proyecto actualizado exitosamente',
+      data: editedProyect,
+    });
+  }
   @Delete('/:proyectID')
   async deleteProyect(@Res() res, @Param('proyectID') proyectID) {
     const deletedProyect = await this.proyectsService.deleteProyect(proyectID);
