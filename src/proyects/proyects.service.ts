@@ -16,7 +16,8 @@ export class ProyectsService {
     const proyect = await this.proyectModel.findById(proyectID);
     return proyect;
   }
-  async create(proyect: IProyect): Promise<IProyect> {
+  async create(proyect: IProyect, imagePublicRoute: any): Promise<IProyect> {
+    proyect.posterPath = imagePublicRoute;
     const new_proyect = await new this.proyectModel(proyect);
     return await new_proyect.save();
   }

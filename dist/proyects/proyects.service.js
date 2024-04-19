@@ -28,7 +28,8 @@ let ProyectsService = class ProyectsService {
         const proyect = await this.proyectModel.findById(proyectID);
         return proyect;
     }
-    async create(proyect) {
+    async create(proyect, imagePublicRoute) {
+        proyect.posterPath = imagePublicRoute;
         const new_proyect = await new this.proyectModel(proyect);
         return await new_proyect.save();
     }

@@ -12,6 +12,7 @@ const proyects_controller_1 = require("./proyects.controller");
 const proyects_service_1 = require("./proyects.service");
 const mongoose_1 = require("@nestjs/mongoose");
 const proyects_schema_1 = require("../Schema/proyects.schema");
+const image_service_1 = require("../image/image.service");
 let ProyectsModule = class ProyectsModule {
 };
 exports.ProyectsModule = ProyectsModule;
@@ -21,7 +22,7 @@ exports.ProyectsModule = ProyectsModule = __decorate([
             mongoose_1.MongooseModule.forFeature([{ name: 'Proyects', schema: proyects_schema_1.ProyectSchema }]),
         ],
         controllers: [proyects_controller_1.ProyectsController],
-        providers: [proyects_service_1.ProyectsService],
+        providers: [proyects_service_1.ProyectsService, image_service_1.ImageService],
     })
 ], ProyectsModule);
 //# sourceMappingURL=proyects.module.js.map

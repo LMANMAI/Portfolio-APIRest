@@ -16,7 +16,7 @@ export class ImageService {
 
   async uploadImage(
     file: Express.Multer.File,
-  ): Promise<UploadApiResponse | UploadApiErrorResponse> {
+  ): Promise<UploadApiResponse | UploadApiErrorResponse | string> {
     return new Promise((resolve, reject) => {
       const uploadStream = v2.uploader.upload_stream(
         { folder: 'proyects', resource_type: 'auto' },

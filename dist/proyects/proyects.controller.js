@@ -15,9 +15,12 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.ProyectsController = void 0;
 const common_1 = require("@nestjs/common");
 const proyects_service_1 = require("./proyects.service");
+const image_service_1 = require("../image/image.service");
+const platform_express_1 = require("@nestjs/platform-express");
 let ProyectsController = class ProyectsController {
-    constructor(proyectsService) {
+    constructor(proyectsService, imageService) {
         this.proyectsService = proyectsService;
+        this.imageService = imageService;
     }
     async getProyects(res) {
         const proyects = await this.proyectsService.getAll();
@@ -33,11 +36,12 @@ let ProyectsController = class ProyectsController {
             .status(common_1.HttpStatus.OK)
             .json({ status: 200, msg: 'proyectos', proyect });
     }
-    async setProyects(res, proyect) {
-        if (!proyect) {
-            throw new common_1.BadRequestException('Datos del proyecto requeridos');
+    async setProyects(res, proyect, image) {
+        if (!proyect || !image) {
+            throw new common_1.BadRequestException('Datos del proyecto y la imagen son requeridos');
         }
-        const newProyect = await this.proyectsService.create(proyect);
+        const imagePublicRoute = await this.imageService.uploadImage(image);
+        const newProyect = await this.proyectsService.create(JSON.parse(proyect.proyect), imagePublicRoute);
         return res.status(common_1.HttpStatus.OK).json({
             status: 200,
             message: 'Proyecto creado exitosamente',
@@ -83,10 +87,12 @@ __decorate([
 ], ProyectsController.prototype, "getOne", null);
 __decorate([
     (0, common_1.Post)('/create'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object]),
+    __metadata("design:paramtypes", [Object, Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "setProyects", null);
 __decorate([
@@ -108,6 +114,7 @@ __decorate([
 ], ProyectsController.prototype, "deleteProyect", null);
 exports.ProyectsController = ProyectsController = __decorate([
     (0, common_1.Controller)('proyects'),
-    __metadata("design:paramtypes", [proyects_service_1.ProyectsService])
+    __metadata("design:paramtypes", [proyects_service_1.ProyectsService,
+        image_service_1.ImageService])
 ], ProyectsController);
 //# sourceMappingURL=proyects.controller.js.map

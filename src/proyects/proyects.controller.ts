@@ -10,13 +10,20 @@ import {
   Put,
   Delete,
   BadRequestException,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ProyectsService } from './proyects.service';
+import { ImageService } from '../image/image.service';
 import { IProyect } from '../Schema/proyects.schema';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('proyects')
 export class ProyectsController {
-  constructor(private proyectsService: ProyectsService) {}
+  constructor(
+    private proyectsService: ProyectsService,
+    private imageService: ImageService,
+  ) {}
   @Get('/')
   async getProyects(@Res() res): Promise<IProyect> {
     const proyects = await this.proyectsService.getAll();
@@ -35,11 +42,24 @@ export class ProyectsController {
   }
 
   @Post('/create')
-  async setProyects(@Res() res, @Body() proyect: IProyect): Promise<IProyect> {
-    if (!proyect) {
-      throw new BadRequestException('Datos del proyecto requeridos');
+  @UseInterceptors(FileInterceptor('image'))
+  async setProyects(
+    @Res() res,
+    @Body() proyect: any,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    if (!proyect || !image) {
+      throw new BadRequestException(
+        'Datos del proyecto y la imagen son requeridos',
+      );
     }
-    const newProyect = await this.proyectsService.create(proyect);
+
+    const imagePublicRoute = await this.imageService.uploadImage(image);
+    const newProyect = await this.proyectsService.create(
+      JSON.parse(proyect.proyect),
+      imagePublicRoute,
+    );
+
     return res.status(HttpStatus.OK).json({
       status: 200,
       message: 'Proyecto creado exitosamente',

@@ -23,7 +23,7 @@
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
 import { Schema, Document } from 'mongoose';
-interface IAditionlData {
+export interface IAditionlData {
     text: string;
     img: string;
 }

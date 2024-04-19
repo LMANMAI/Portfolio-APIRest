@@ -29,7 +29,7 @@ export declare class ProyectsService {
     constructor(proyectModel: Model<IProyect>);
     getAll(): Promise<IProyect[]>;
     getOne(proyectID: string): Promise<IProyect>;
-    create(proyect: IProyect): Promise<IProyect>;
+    create(proyect: IProyect, imagePublicRoute: any): Promise<IProyect>;
     editProyect(proyectID: string, updatedProyect: Partial<IProyect>): Promise<IProyect | null>;
     deleteProyect(proyectID: string): Promise<IProyect | null>;
 }
