@@ -37,6 +37,37 @@ let ProyectsService = class ProyectsService {
         const proyect = await this.proyectModel.findByIdAndUpdate(proyectID, updatedProyect, { new: true });
         return proyect;
     }
+    async deleteProyectEntrys(proyectID, entryId) {
+        const proyect = await this.proyectModel.findByIdAndUpdate(proyectID, { $pull: { aditionalData: { _id: entryId } } }, { new: true });
+        if (!proyect) {
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        }
+        return proyect;
+    }
+    async editProyectEntry(proyectID, aditionalDataId, updatedAditionalData) {
+        const proyect = await this.proyectModel.findOneAndUpdate({ _id: proyectID, 'aditionalData._id': aditionalDataId }, { $set: { 'aditionalData.$': updatedAditionalData } }, { new: true });
+        if (!proyect) {
+            throw new common_1.NotFoundException('Proyecto o entrada no encontrada');
+        }
+        return proyect;
+    }
+    async addAditionalData(proyectID, entry) {
+        const proyect = await this.proyectModel.findById(proyectID);
+        if (!proyect) {
+            return null;
+        }
+        if (proyect.aditionalData.length >= 3) {
+            throw new Error('No se puede agregar más de 3 entradas en aditionalData');
+        }
+        proyect.aditionalData.push(entry);
+        try {
+            return await this.proyectModel.findByIdAndUpdate(proyectID, Object.assign(Object.assign({}, proyect), { aditionalData: [...proyect.aditionalData, entry] }), { new: true });
+        }
+        catch (error) {
+            console.error('Error guardando el proyecto:', error);
+            throw new Error('Error guardando el proyecto: ' + error.message);
+        }
+    }
     async deleteProyect(proyectID) {
         const proyect = await this.proyectModel.findByIdAndDelete(proyectID);
         return proyect;

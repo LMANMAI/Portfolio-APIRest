@@ -15,7 +15,7 @@ import {
 } from '@nestjs/common';
 import { ProyectsService } from './proyects.service';
 import { ImageService } from '../image/image.service';
-import { IProyect } from '../Schema/proyects.schema';
+import { IAditionlData, IProyect } from '../Schema/proyects.schema';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('proyects')
@@ -48,10 +48,14 @@ export class ProyectsController {
     @Body() proyect: any,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    if (!proyect || !image) {
+    if (!proyect && !image) {
       throw new BadRequestException(
         'Datos del proyecto y la imagen son requeridos',
       );
+    } else if (proyect && !image) {
+      throw new BadRequestException('La imagen es requerida');
+    } else if (!proyect && image) {
+      throw new BadRequestException('El proyecto es requerido');
     }
 
     const imagePublicRoute = await this.imageService.uploadImage(image);
@@ -67,15 +71,15 @@ export class ProyectsController {
     });
   }
 
-  @Put('/:proyectID')
+  @Put('editproyect/:proyectID')
   async editProyect(
     @Res() res,
     @Param('proyectID') proyectID,
-    @Body() updatedProyect: Partial<IProyect>,
+    @Body() proyect: Partial<IProyect>,
   ) {
     const editedProyect = await this.proyectsService.editProyect(
       proyectID,
-      updatedProyect,
+      proyect,
     );
     if (!editedProyect) throw new NotFoundException('Proyecto no encontrado');
     return res.status(HttpStatus.OK).json({
@@ -85,16 +89,78 @@ export class ProyectsController {
     });
   }
 
+  @Put('edit/:proyectID/:entryId')
+  @UseInterceptors(FileInterceptor('image'))
+  async editProyectEntry(
+    @Res() res,
+    @Param('proyectID') proyectID,
+    @Param('entryId') entryId,
+    @Body() proyect: Partial<IAditionlData>,
+    @UploadedFile() image: Express.Multer.File,
+  ) {
+    let imagePublicRoute = null;
+    console.log(proyect, 'proyect');
+    if (image) {
+      imagePublicRoute = await this.imageService.uploadImage(image);
+    } else imagePublicRoute = proyect.image;
+
+    const editedProyect = await this.proyectsService.editProyectEntry(
+      proyectID,
+      entryId,
+      { img: imagePublicRoute, text: proyect.text },
+    );
+    if (!editedProyect) throw new NotFoundException('Proyecto no encontrado');
+    return res.status(HttpStatus.OK).json({
+      status: 200,
+      message: 'Entrada editada exitosamente',
+      data: editedProyect,
+    });
+  }
+
+  @Put('deleteentry/:proyectID/:entryId')
+  async deleteProyectEntrys(
+    @Res() res,
+    @Param('proyectID') proyectID,
+    @Param('entryId') entryId,
+  ) {
+    const editedProyect = await this.proyectsService.deleteProyectEntrys(
+      proyectID,
+      entryId,
+    );
+    if (!editedProyect) throw new NotFoundException('Proyecto no encontrado');
+    return res.status(HttpStatus.OK).json({
+      status: 200,
+      message: 'Entrada eliminada exitosamente',
+      data: editedProyect,
+    });
+  }
   @UseInterceptors(FileInterceptor('image'))
   @Put('/aditionalData/:proyectID')
   async setAditionalData(
     @Res() res,
     @Param('proyectID') proyectID,
-    @Body() updatedProyect: Partial<IProyect>,
+    @Body() description: any,
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    const editedProyect = await this.proyectsService.editProyect(
+    const currentProject = await this.proyectsService.getOne(proyectID);
+    if (!currentProject) throw new NotFoundException('Proyecto no encontrado');
+
+    // Verificar la longitud de aditionalData
+    if (currentProject.aditionalData.length >= 3) {
+      return res.status(HttpStatus.BAD_REQUEST).json({
+        status: 400,
+        message: 'No se puede agregar más de 3 entradas.',
+      });
+    }
+    const imagePublicRoute = await this.imageService.uploadImage(image);
+    const entry = {
+      img: imagePublicRoute,
+      text: JSON.parse(description.description),
+    };
+
+    const editedProyect = await this.proyectsService.addAditionalData(
       proyectID,
-      updatedProyect,
+      entry,
     );
     if (!editedProyect) throw new NotFoundException('Proyecto no encontrado');
     return res.status(HttpStatus.OK).json({
@@ -103,6 +169,7 @@ export class ProyectsController {
       data: editedProyect,
     });
   }
+
   @Delete('/:proyectID')
   async deleteProyect(@Res() res, @Param('proyectID') proyectID) {
     const deletedProyect = await this.proyectsService.deleteProyect(proyectID);

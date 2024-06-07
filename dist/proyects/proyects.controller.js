@@ -37,8 +37,14 @@ let ProyectsController = class ProyectsController {
             .json({ status: 200, msg: 'proyectos', proyect });
     }
     async setProyects(res, proyect, image) {
-        if (!proyect || !image) {
+        if (!proyect && !image) {
             throw new common_1.BadRequestException('Datos del proyecto y la imagen son requeridos');
+        }
+        else if (proyect && !image) {
+            throw new common_1.BadRequestException('La imagen es requerida');
+        }
+        else if (!proyect && image) {
+            throw new common_1.BadRequestException('El proyecto es requerido');
         }
         const imagePublicRoute = await this.imageService.uploadImage(image);
         const newProyect = await this.proyectsService.create(JSON.parse(proyect.proyect), imagePublicRoute);
@@ -48,8 +54,59 @@ let ProyectsController = class ProyectsController {
             data: newProyect,
         });
     }
-    async editProyect(res, proyectID, updatedProyect) {
-        const editedProyect = await this.proyectsService.editProyect(proyectID, updatedProyect);
+    async editProyect(res, proyectID, proyect) {
+        const editedProyect = await this.proyectsService.editProyect(proyectID, proyect);
+        if (!editedProyect)
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        return res.status(common_1.HttpStatus.OK).json({
+            status: 200,
+            message: 'Proyecto actualizado exitosamente',
+            data: editedProyect,
+        });
+    }
+    async editProyectEntry(res, proyectID, entryId, proyect, image) {
+        let imagePublicRoute = null;
+        console.log(proyect, 'proyect');
+        if (image) {
+            imagePublicRoute = await this.imageService.uploadImage(image);
+        }
+        else
+            imagePublicRoute = proyect.image;
+        const editedProyect = await this.proyectsService.editProyectEntry(proyectID, entryId, { img: imagePublicRoute, text: proyect.text });
+        if (!editedProyect)
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        return res.status(common_1.HttpStatus.OK).json({
+            status: 200,
+            message: 'Entrada editada exitosamente',
+            data: editedProyect,
+        });
+    }
+    async deleteProyectEntrys(res, proyectID, entryId) {
+        const editedProyect = await this.proyectsService.deleteProyectEntrys(proyectID, entryId);
+        if (!editedProyect)
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        return res.status(common_1.HttpStatus.OK).json({
+            status: 200,
+            message: 'Entrada eliminada exitosamente',
+            data: editedProyect,
+        });
+    }
+    async setAditionalData(res, proyectID, description, image) {
+        const currentProject = await this.proyectsService.getOne(proyectID);
+        if (!currentProject)
+            throw new common_1.NotFoundException('Proyecto no encontrado');
+        if (currentProject.aditionalData.length >= 3) {
+            return res.status(common_1.HttpStatus.BAD_REQUEST).json({
+                status: 400,
+                message: 'No se puede agregar más de 3 entradas.',
+            });
+        }
+        const imagePublicRoute = await this.imageService.uploadImage(image);
+        const entry = {
+            img: imagePublicRoute,
+            text: JSON.parse(description.description),
+        };
+        const editedProyect = await this.proyectsService.addAditionalData(proyectID, entry);
         if (!editedProyect)
             throw new common_1.NotFoundException('Proyecto no encontrado');
         return res.status(common_1.HttpStatus.OK).json({
@@ -96,7 +153,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "setProyects", null);
 __decorate([
-    (0, common_1.Put)('/:proyectID'),
+    (0, common_1.Put)('editproyect/:proyectID'),
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Param)('proyectID')),
     __param(2, (0, common_1.Body)()),
@@ -104,6 +161,38 @@ __decorate([
     __metadata("design:paramtypes", [Object, Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "editProyect", null);
+__decorate([
+    (0, common_1.Put)('edit/:proyectID/:entryId'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Param)('proyectID')),
+    __param(2, (0, common_1.Param)('entryId')),
+    __param(3, (0, common_1.Body)()),
+    __param(4, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object, Object, Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProyectsController.prototype, "editProyectEntry", null);
+__decorate([
+    (0, common_1.Put)('deleteentry/:proyectID/:entryId'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Param)('proyectID')),
+    __param(2, (0, common_1.Param)('entryId')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProyectsController.prototype, "deleteProyectEntrys", null);
+__decorate([
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
+    (0, common_1.Put)('/aditionalData/:proyectID'),
+    __param(0, (0, common_1.Res)()),
+    __param(1, (0, common_1.Param)('proyectID')),
+    __param(2, (0, common_1.Body)()),
+    __param(3, (0, common_1.UploadedFile)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object, Object, Object]),
+    __metadata("design:returntype", Promise)
+], ProyectsController.prototype, "setAditionalData", null);
 __decorate([
     (0, common_1.Delete)('/:proyectID'),
     __param(0, (0, common_1.Res)()),

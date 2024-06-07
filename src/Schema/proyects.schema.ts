@@ -2,7 +2,8 @@ import { Schema, Document } from 'mongoose';
 
 export interface IAditionlData {
   text: string;
-  img: string;
+  img: any;
+  image?: string;
 }
 
 const AditionlDataSchema = new Schema<IAditionlData>({
@@ -26,7 +27,7 @@ export const ProyectSchema = new Schema<IProyect>({
   productionUrl: { required: true, trim: true, type: String },
   repositoryUrl: { required: true, trim: true, type: String },
   technologyStack: { required: true, trim: true, type: [String] },
-  posterPath: { required: true, trim: true, type: String },
+  posterPath: { trim: true, type: String },
   proyectType: { required: true, trim: true, type: String },
   description: { type: String },
   aditionalData: { type: [AditionlDataSchema], default: [] },

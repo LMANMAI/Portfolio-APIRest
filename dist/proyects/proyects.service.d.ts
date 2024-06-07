@@ -22,7 +22,7 @@
 /// <reference types="mongoose/types/validation" />
 /// <reference types="mongoose/types/virtuals" />
 /// <reference types="mongoose/types/inferschematype" />
-import { IProyect } from '../Schema/proyects.schema';
+import { IAditionlData, IProyect } from '../Schema/proyects.schema';
 import { Model } from 'mongoose';
 export declare class ProyectsService {
     private readonly proyectModel;
@@ -31,5 +31,8 @@ export declare class ProyectsService {
     getOne(proyectID: string): Promise<IProyect>;
     create(proyect: IProyect, imagePublicRoute: any): Promise<IProyect>;
     editProyect(proyectID: string, updatedProyect: Partial<IProyect>): Promise<IProyect | null>;
+    deleteProyectEntrys(proyectID: string, entryId: string): Promise<IProyect | null>;
+    editProyectEntry(proyectID: string, aditionalDataId: string, updatedAditionalData: Partial<IAditionlData>): Promise<IProyect | null>;
+    addAditionalData(proyectID: string, entry: IAditionlData): Promise<any | null>;
     deleteProyect(proyectID: string): Promise<IProyect | null>;
 }

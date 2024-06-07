@@ -25,7 +25,8 @@
 import { Schema, Document } from 'mongoose';
 export interface IAditionlData {
     text: string;
-    img: string;
+    img: any;
+    image?: string;
 }
 export interface IProyect extends Document {
     name: string;

@@ -11,7 +11,7 @@ exports.ProyectSchema = new mongoose_1.Schema({
     productionUrl: { required: true, trim: true, type: String },
     repositoryUrl: { required: true, trim: true, type: String },
     technologyStack: { required: true, trim: true, type: [String] },
-    posterPath: { required: true, trim: true, type: String },
+    posterPath: { trim: true, type: String },
     proyectType: { required: true, trim: true, type: String },
     description: { type: String },
     aditionalData: { type: [AditionlDataSchema], default: [] },
