@@ -99,10 +99,11 @@ export class ProyectsController {
     @UploadedFile() image: Express.Multer.File,
   ) {
     let imagePublicRoute = null;
-    console.log(proyect, 'proyect');
     if (image) {
       imagePublicRoute = await this.imageService.uploadImage(image);
-    } else imagePublicRoute = proyect.image;
+    } else {
+      imagePublicRoute = proyect.image;
+    }
 
     const editedProyect = await this.proyectsService.editProyectEntry(
       proyectID,

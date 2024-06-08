@@ -7,7 +7,6 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     app.enableCors();
     app.use(bodyParser.json({ type: 'application/json' }));
-    console.log(process.env.PORT);
     await app.listen(process.env.PORT || 4000);
 }
 bootstrap();

@@ -7,7 +7,6 @@ async function bootstrap() {
   app.enableCors();
   app.use(bodyParser.json({ type: 'application/json' }));
 
-  console.log(process.env.PORT);
   await app.listen(process.env.PORT || 4000);
 }
 

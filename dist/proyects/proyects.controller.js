@@ -66,12 +66,12 @@ let ProyectsController = class ProyectsController {
     }
     async editProyectEntry(res, proyectID, entryId, proyect, image) {
         let imagePublicRoute = null;
-        console.log(proyect, 'proyect');
         if (image) {
             imagePublicRoute = await this.imageService.uploadImage(image);
         }
-        else
+        else {
             imagePublicRoute = proyect.image;
+        }
         const editedProyect = await this.proyectsService.editProyectEntry(proyectID, entryId, { img: imagePublicRoute, text: proyect.text });
         if (!editedProyect)
             throw new common_1.NotFoundException('Proyecto no encontrado');
