@@ -6,3 +6,4 @@ package-lock.json
 dist/*
 .vercel
 /dist
+/dist/.gitkeep
