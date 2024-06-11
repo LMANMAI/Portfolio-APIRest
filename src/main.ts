@@ -14,6 +14,7 @@ async function bootstrap() {
       'Content-Type',
       'Accept',
       'Authorization',
+      'api-key',
     ],
   });
 
