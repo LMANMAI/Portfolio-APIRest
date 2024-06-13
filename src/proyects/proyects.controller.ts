@@ -48,27 +48,31 @@ export class ProyectsController {
     @Body() proyect: any,
     @UploadedFile() image: Express.Multer.File,
   ) {
-    if (!proyect && !image) {
-      throw new BadRequestException(
-        'Datos del proyecto y la imagen son requeridos',
+    try {
+      if (!proyect && !image) {
+        throw new BadRequestException(
+          'Datos del proyecto y la imagen son requeridos',
+        );
+      } else if (proyect && !image) {
+        throw new BadRequestException('La imagen es requerida');
+      } else if (!proyect && image) {
+        throw new BadRequestException('El proyecto es requerido');
+      }
+
+      const imagePublicRoute = await this.imageService.uploadImage(image);
+      const newProyect = await this.proyectsService.create(
+        JSON.parse(proyect.proyect),
+        imagePublicRoute,
       );
-    } else if (proyect && !image) {
-      throw new BadRequestException('La imagen es requerida');
-    } else if (!proyect && image) {
-      throw new BadRequestException('El proyecto es requerido');
+
+      return res.status(HttpStatus.OK).json({
+        status: 200,
+        message: 'Proyecto creado exitosamente',
+        data: newProyect,
+      });
+    } catch (error) {
+      console.log(error);
     }
-
-    const imagePublicRoute = await this.imageService.uploadImage(image);
-    const newProyect = await this.proyectsService.create(
-      JSON.parse(proyect.proyect),
-      imagePublicRoute,
-    );
-
-    return res.status(HttpStatus.OK).json({
-      status: 200,
-      message: 'Proyecto creado exitosamente',
-      data: newProyect,
-    });
   }
 
   @Put('editproyect/:proyectID')
