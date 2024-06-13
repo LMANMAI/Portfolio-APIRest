@@ -72,6 +72,10 @@ export class ProyectsController {
       });
     } catch (error) {
       console.log(error);
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+        data: error,
+      });
     }
   }
 
