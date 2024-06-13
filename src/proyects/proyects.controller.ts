@@ -72,15 +72,24 @@ export class ProyectsController {
   }
 
   @Put('editproyect/:proyectID')
+  @UseInterceptors(FileInterceptor('image'))
   async editProyect(
     @Res() res,
     @Param('proyectID') proyectID,
-    @Body() proyect: Partial<IProyect>,
+    @Body() proyect: any,
+    @UploadedFile() image: Express.Multer.File,
   ) {
-    const editedProyect = await this.proyectsService.editProyect(
-      proyectID,
-      proyect,
-    );
+    let parsedProyect = JSON.parse(proyect.proyect);
+    let imagePublicRoute = null;
+    if (image) {
+      imagePublicRoute = await this.imageService.uploadImage(image);
+    } else {
+      imagePublicRoute = parsedProyect.posterPath;
+    }
+    const editedProyect = await this.proyectsService.editProyect(proyectID, {
+      ...parsedProyect,
+      posterPath: imagePublicRoute,
+    });
     if (!editedProyect) throw new NotFoundException('Proyecto no encontrado');
     return res.status(HttpStatus.OK).json({
       status: 200,

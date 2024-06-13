@@ -54,8 +54,16 @@ let ProyectsController = class ProyectsController {
             data: newProyect,
         });
     }
-    async editProyect(res, proyectID, proyect) {
-        const editedProyect = await this.proyectsService.editProyect(proyectID, proyect);
+    async editProyect(res, proyectID, proyect, image) {
+        let parsedProyect = JSON.parse(proyect.proyect);
+        let imagePublicRoute = null;
+        if (image) {
+            imagePublicRoute = await this.imageService.uploadImage(image);
+        }
+        else {
+            imagePublicRoute = parsedProyect.posterPath;
+        }
+        const editedProyect = await this.proyectsService.editProyect(proyectID, Object.assign(Object.assign({}, parsedProyect), { posterPath: imagePublicRoute }));
         if (!editedProyect)
             throw new common_1.NotFoundException('Proyecto no encontrado');
         return res.status(common_1.HttpStatus.OK).json({
@@ -154,11 +162,13 @@ __decorate([
 ], ProyectsController.prototype, "setProyects", null);
 __decorate([
     (0, common_1.Put)('editproyect/:proyectID'),
+    (0, common_1.UseInterceptors)((0, platform_express_1.FileInterceptor)('image')),
     __param(0, (0, common_1.Res)()),
     __param(1, (0, common_1.Param)('proyectID')),
     __param(2, (0, common_1.Body)()),
+    __param(3, (0, common_1.UploadedFile)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object, Object, Object]),
+    __metadata("design:paramtypes", [Object, Object, Object, Object]),
     __metadata("design:returntype", Promise)
 ], ProyectsController.prototype, "editProyect", null);
 __decorate([

@@ -9,7 +9,7 @@ export declare class ProyectsController {
     getProyects(res: any): Promise<IProyect>;
     getOne(res: any, proyectID: any): Promise<any>;
     setProyects(res: any, proyect: any, image: Express.Multer.File): Promise<any>;
-    editProyect(res: any, proyectID: any, proyect: Partial<IProyect>): Promise<any>;
+    editProyect(res: any, proyectID: any, proyect: any, image: Express.Multer.File): Promise<any>;
     editProyectEntry(res: any, proyectID: any, entryId: any, proyect: Partial<IAditionlData>, image: Express.Multer.File): Promise<any>;
     deleteProyectEntrys(res: any, proyectID: any, entryId: any): Promise<any>;
     setAditionalData(res: any, proyectID: any, description: any, image: Express.Multer.File): Promise<any>;
