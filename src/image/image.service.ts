@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import * as cloudinary from 'cloudinary';
+// import * as toStream from 'buffer-to-stream';
+import { Readable } from 'stream';
 import { UploadApiErrorResponse, UploadApiResponse, v2 } from 'cloudinary';
-import * as toStream from 'buffer-to-stream';
 
 @Injectable()
 export class ImageService {
@@ -27,7 +28,11 @@ export class ImageService {
           resolve(result.public_id);
         },
       );
-      toStream(file.buffer).pipe(uploadStream);
+
+      const bufferStream = new Readable();
+      bufferStream.push(file.buffer);
+      bufferStream.push(null);
+      bufferStream.pipe(uploadStream);
     });
   }
 
