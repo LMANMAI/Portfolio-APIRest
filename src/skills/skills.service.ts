@@ -1,25 +1,25 @@
 import { Injectable } from '@nestjs/common';
 import { ISkill } from './skill.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class SkillsService {
-  private readonly skills: ISkill[] = [];
+  constructor(
+    @InjectModel('Skill') private readonly skillModel: Model<ISkill>,
+  ) {}
 
-  create(skillDto: ISkill) {
-    this.skills.push(skillDto);
-    return skillDto;
+  async create(skillDto: ISkill): Promise<ISkill> {
+    const newSkill = new this.skillModel(skillDto);
+    return newSkill.save();
   }
 
-  findAll() {
-    return this.skills;
+  async findAll(): Promise<ISkill[]> {
+    return this.skillModel.find();
   }
-  remove(id: string) {
-    const index = this.skills.findIndex((skill) => skill.id === id);
-    if (index !== -1) {
-      const removedSkill = this.skills[index];
-      this.skills.splice(index, 1);
-      return removedSkill;
-    }
-    return null;
+
+  async remove(id: string): Promise<ISkill | null> {
+    const proyect = await this.skillModel.findByIdAndDelete(id);
+    return proyect;
   }
 }

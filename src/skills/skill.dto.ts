@@ -1,11 +1,15 @@
 import { Schema, Document } from 'mongoose';
-
+type skills = 'Front End' | 'Back End' | 'Documentacion' | 'Herramienta';
 export interface ISkill extends Document {
   name: string;
-  category: string;
+  category: skills;
 }
 
 export const SkillSchema = new Schema<ISkill>({
-  name: { required: true, trim: true, type: String },
-  category: { required: true, trim: true, type: String },
+  name: { type: String, required: true },
+  category: {
+    type: String,
+    required: true,
+    enum: ['Front End', 'Back End', 'Documentacion', 'Herramienta'],
+  },
 });

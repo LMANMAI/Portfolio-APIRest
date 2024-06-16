@@ -5,7 +5,8 @@ import {
   Body,
   Param,
   Delete,
-  Put,
+  HttpStatus,
+  Res,
 } from '@nestjs/common';
 import { SkillsService } from './skills.service';
 import { ISkill } from './skill.dto';
@@ -14,18 +15,53 @@ import { ISkill } from './skill.dto';
 export class SkillsController {
   constructor(private readonly skillsService: SkillsService) {}
 
-  @Post()
-  create(@Body() createSkillDto: ISkill) {
-    return this.skillsService.create(createSkillDto);
+  @Post('/create')
+  async create(@Body() createSkillDto: ISkill, @Res() res) {
+    try {
+      console.log(createSkillDto, 'createSkillDto');
+      const newSkill = await this.skillsService.create(createSkillDto);
+      return res.status(HttpStatus.OK).json({
+        status: 200,
+        message: 'Habilidad o herramienta creada exitosamente',
+        data: newSkill,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+        data: error,
+      });
+    }
   }
 
   @Get()
-  findAll() {
-    return this.skillsService.findAll();
+  async findAll(@Res() res) {
+    try {
+      const skills = await this.skillsService.findAll();
+      return res
+        .status(HttpStatus.OK)
+        .json({ status: 200, msg: 'skills almacenadas.', skills });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+        data: error,
+      });
+    }
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.skillsService.remove(id);
+  @Delete('/:id')
+  async remove(@Res() res, @Param('id') id: string) {
+    try {
+      const deletedSkill = await this.skillsService.remove(id);
+      return res.status(HttpStatus.OK).json({
+        status: 200,
+        message: 'Proyecto eliminado exitosamente',
+        data: deletedSkill,
+      });
+    } catch (error) {
+      return res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({
+        message: error.message,
+        data: error,
+      });
+    }
   }
 }
