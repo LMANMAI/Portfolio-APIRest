@@ -54,7 +54,7 @@ export class SkillsController {
       const deletedSkill = await this.skillsService.remove(id);
       return res.status(HttpStatus.OK).json({
         status: 200,
-        message: 'Proyecto eliminado exitosamente',
+        message: 'Habilidad o herramienta eliminado exitosamente',
         data: deletedSkill,
       });
     } catch (error) {
